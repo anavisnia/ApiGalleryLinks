@@ -1,10 +1,16 @@
-﻿using System;
+﻿using ApiGalleryLinks.Models;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace ApiGalleryLinks
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             /*
              1. Sukurti Konsolinę Applikaciją, kuri atspausdina visas nuotraukų nuorodas paimtas iš RestAPI
@@ -16,6 +22,22 @@ namespace ApiGalleryLinks
             Patarimas: Instaliuokite, panaudokite 'HTMLAgilityPack Nuget package' savo programoje.
              */
 
+            var httpClient = new HttpClient();
+
+            var httpResponse = await httpClient.GetAsync("https://jsonplaceholder.typicode.com/users");
+
+            if(httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var contentSrting = await httpResponse.Content.ReadAsStringAsync();
+
+                var users = JsonConvert.DeserializeObject<List<User>>(contentSrting);
+
+
+                var specificUser = users.Where(u => u.Name == "Mrs. Dennis Schulist").FirstOrDefault();
+
+                
+
+            }
 
         }
     }
